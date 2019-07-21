@@ -1,0 +1,11 @@
+{
+  "name": "capital-cities-weather",
+  "version": "1.0.0",
+  "description": "Ranks global capital cities by weather",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tiago Marques",
+  "license": "ISC"
+}
