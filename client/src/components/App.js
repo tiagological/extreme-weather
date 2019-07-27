@@ -1,46 +1,48 @@
 import React from 'react';
 import axios from 'axios';
-import Autocomplete from './Autocomplete';
+// import Autocomplete from './Autocomplete';
+import { connect } from 'react-redux';
+import { getCities } from '../actions';
+import AutoSuggest from './AutoSuggest';
+import styled from 'styled-components/macro';
+import '../styles/globalStyles.css';
 
 class App extends React.Component {
-  state = {
-    countryData: []
-  };
-
-  componentDidMount = async () => {
-    try {
-      const response = await axios.get('/get-countries');
-      const data = response.data;
-      let countryData = [];
-      data.forEach(country => {
-        if (country.capital.length > 0) {
-          countryData.push({
-            id: country.alpha3Code,
-            name: country.name,
-            capital: country.capital
-          });
-        }
-      });
-      this.setState({
-        countryData
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  componentDidMount = () => {
+    this.props.getCities();
   };
 
   render() {
-    const mappedCountries = this.state.countryData.map(country => {
-      return `${country.capital} (${country.name})`;
+    const citiesList = this.props.cities.map(country => {
+      return country.capital;
     });
 
     return (
-      <div>
-        <h1>Autocomplete Testing</h1>
-        <Autocomplete suggestions={mappedCountries} />
-      </div>
+      <Container>
+        <Text>Autocomplete Testing</Text>
+        <AutoSuggest citiesList={citiesList} />
+        <button>Search</button>
+      </Container>
     );
   }
 }
 
-export default App;
+const Container = styled.div`
+  height: 100%;
+  box-sizing: border-box;
+`;
+
+const Text = styled.h1`
+  margin: 0;
+`;
+
+const mapStateToProps = state => {
+  return {
+    cities: state.citiesData
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { getCities }
+)(App);
