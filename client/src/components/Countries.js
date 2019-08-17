@@ -4,11 +4,15 @@ import { Query } from 'react-apollo';
 import CountryItem from './CountryItem';
 
 const COUNTRIES_QUERY = gql`
-  query CountriesQuery {
-    countries {
-      name
-      alpha2Code
+  query CitiesTempQuery {
+    citiesWeather {
+      countryName
       capital
+      currentTemp
+      error {
+        status
+        message
+      }
     }
   }
 `;
@@ -25,8 +29,8 @@ class Countries extends Component {
 
             return (
               <React.Fragment>
-                {data.countries.map(country => (
-                  <CountryItem key={country.alpha2Code} country={country} />
+                {data.citiesWeather.map(country => (
+                  <CountryItem key={country.countryName} country={country} />
                 ))}
               </React.Fragment>
             );

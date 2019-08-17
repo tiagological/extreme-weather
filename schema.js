@@ -58,6 +58,26 @@ const CityTempType = new GraphQLObjectType({
   })
 });
 
+// Error Type
+
+const ErrorType = new GraphQLObjectType({
+  name: 'Error',
+  fields: () => ({
+    status: { type: GraphQLBoolean },
+    message: { type: GraphQLString }
+  })
+});
+
+const CitiesTempType = new GraphQLObjectType({
+  name: 'CitiesTemp',
+  fields: () => ({
+    countryName: { type: GraphQLString },
+    capital: { type: GraphQLString },
+    currentTemp: { type: GraphQLFloat },
+    error: { type: ErrorType }
+  })
+});
+
 // Root Query
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -73,6 +93,76 @@ const RootQuery = new GraphQLObjectType({
             'X-RapidAPI-Key': process.env.COUNTRIES_API_KEY
           }
         }).then(res => res.data);
+      }
+    },
+    citiesWeather: {
+      type: new GraphQLList(CitiesTempType),
+      async resolve(parent, args) {
+        try {
+          const countryListResponse = await axios({
+            method: 'get',
+            url: 'https://***REMOVED***/rest/v1/all',
+            headers: {
+              'X-RapidAPI-Host': process.env.COUNTRIES_API_HOST,
+              'X-RapidAPI-Key': process.env.COUNTRIES_API_KEY
+            }
+          });
+
+          const countryList = countryListResponse.data;
+
+          const fullResults = await Promise.all(
+            countryList.map(async country => {
+              try {
+                const cityDataResponse = await axios({
+                  method: 'get',
+                  url:
+                    'https://***REMOVED***/weather',
+                  headers: {
+                    'X-RapidAPI-Host': process.env.OPENWEATHER_API_HOST,
+                    'X-RapidAPI-Key': process.env.OPENWEATHER_API_KEY
+                  },
+                  params: {
+                    q: `${country.capital},${country.alpha2Code}`,
+                    units: 'metric'
+                  }
+                });
+
+                const cityTempMetric = cityDataResponse.data.main.temp;
+
+                return {
+                  countryName: country.name,
+                  capital: country.capital,
+                  currentTemp: cityTempMetric,
+                  error: {
+                    status: false,
+                    message: 'no error'
+                  }
+                };
+              } catch (error) {
+                return {
+                  countryName: country.name,
+                  capital: country.capital,
+                  currentTemp: 0.0,
+                  error: {
+                    status: true,
+                    message: error.response.data.message
+                  }
+                };
+              }
+            })
+          );
+
+          const filteredResults = fullResults.filter(
+            country => country.error.status !== true
+          );
+
+          // returns list sorted by current temperature
+
+          return filteredResults.sort((a, b) => b.currentTemp - a.currentTemp);
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
       }
     },
     cityTemperature: {

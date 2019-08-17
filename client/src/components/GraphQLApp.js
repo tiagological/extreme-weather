@@ -18,67 +18,18 @@ const client = new ApolloClient({
 //           countryName
 //           capital
 //           currentTemp
+//           error {
+//             status
+//             message
+//           }
 //         }
 //       }
 //     `
 //   })
-//   .then(result => console.log(result))
+//   .then(result => console.log(result.data))
 //   .catch(err => console.log(err));
 
 class GraphQLApp extends React.Component {
-  componentDidMount = async () => {
-    try {
-      const countryListResponse = await axios({
-        method: 'get',
-        url: 'https://***REMOVED***/rest/v1/all',
-        headers: {
-          'X-RapidAPI-Host': '***REMOVED***',
-          'X-RapidAPI-Key': '***REMOVED***'
-        }
-      });
-
-      const countryList = countryListResponse.data;
-
-      const currentCitiesTempArray = Promise.all(
-        countryList.map(async country => {
-          try {
-            const cityDataResponse = await axios({
-              method: 'get',
-              url: 'https://***REMOVED***/weather',
-              headers: {
-                'X-RapidAPI-Host': '***REMOVED***',
-                'X-RapidAPI-Key':
-                  '***REMOVED***'
-              },
-              params: {
-                q: `${country.capital},${country.alpha2Code}`,
-                units: 'metric'
-              }
-            });
-
-            const cityTempMetric = cityDataResponse.data.main.temp;
-
-            return {
-              countryName: country.name,
-              capital: country.capital,
-              currentTemp: cityTempMetric
-            };
-          } catch (error) {
-            return {
-              countryName: country.name,
-              capital: country.capital,
-              currentTemp: 'N/A'
-            };
-          }
-        })
-      );
-
-      console.log(currentCitiesTempArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   render() {
     return (
       <ApolloProvider client={client}>
@@ -91,10 +42,21 @@ class GraphQLApp extends React.Component {
   }
 }
 
+const color1 = '#00A4CCFF';
+const color2 = '#F95700FF';
+
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 500%;
+  /* overflow: auto; */
+  background-image: linear-gradient(
+    to top,
+    #00a4ccff,
+    #fee715ff 20%,
+    #f95700ff 70%
+  );
 `;
 
 export default GraphQLApp;
