@@ -2,13 +2,15 @@ import React from 'react';
 import styled from 'styled-components/macro';
 
 export default function CountryItem({
-  country: { countryName, capital, currentTemp, error }
+  country: { countryName, capital, currentTemp, error },
+  ownIndex
 }) {
   return (
     <StyledDiv>
       <CountryContainer>
         <p>
-          {capital}, {countryName} - {currentTemp} C
+          {ownIndex + 1} -{capital}, {countryName} -{' '}
+          {currentTemp % 1 === 0 ? currentTemp : currentTemp.toFixed(1)} C
         </p>
       </CountryContainer>
     </StyledDiv>

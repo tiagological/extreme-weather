@@ -31,9 +31,13 @@ class Countries extends Component {
 
             return (
               <StyledDiv className='animated slideInLeft faster'>
-                <Text>Hottest Capitals</Text>
+                <Text>Top 20 Hottest Capitals</Text>
                 {data.citiesWeather.slice(0, 20).map(country => (
-                  <CountryItem key={country.countryName} country={country} />
+                  <CountryItem
+                    key={country.countryName}
+                    country={country}
+                    ownIndex={data.citiesWeather.indexOf(country)}
+                  />
                 ))}
               </StyledDiv>
             );
