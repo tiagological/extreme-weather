@@ -7,11 +7,9 @@ export default function CountryItem({
   return (
     <StyledDiv>
       <CountryContainer>
-        <h4>Country: {countryName}</h4>
-      </CountryContainer>
-      <CountryContainer>
-        <h5>Capital: {capital}</h5>
-        <h5>Temperature: {error.status === true ? 'N/A' : currentTemp}</h5>
+        <p>
+          {capital}, {countryName} - {currentTemp} C
+        </p>
       </CountryContainer>
     </StyledDiv>
   );
@@ -19,9 +17,14 @@ export default function CountryItem({
 
 const StyledDiv = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const CountryContainer = styled.div`
   margin: 0 1rem;
+  flex-direction: row;
+  align-self: stretch;
 `;
+
+const TempContainer = styled.div``;
