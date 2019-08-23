@@ -72,6 +72,7 @@ const CitiesTempType = new GraphQLObjectType({
   name: 'CitiesTemp',
   fields: () => ({
     countryName: { type: GraphQLString },
+    code: { type: GraphQLString },
     capital: { type: GraphQLString },
     currentTemp: { type: GraphQLFloat },
     error: { type: ErrorType }
@@ -131,6 +132,7 @@ const RootQuery = new GraphQLObjectType({
 
                 return {
                   countryName: country.name,
+                  code: country.alpha2Code,
                   capital: country.capital,
                   currentTemp: cityTempMetric,
                   error: {

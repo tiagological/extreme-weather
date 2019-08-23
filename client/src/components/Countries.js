@@ -10,6 +10,7 @@ const COUNTRIES_QUERY = gql`
   query CitiesTempQuery {
     citiesWeather {
       countryName
+      code
       capital
       currentTemp
       error {
@@ -31,7 +32,15 @@ class Countries extends Component {
 
             return (
               <StyledDiv className='animated slideInLeft faster'>
-                <Text>Top 20 Hottest Capitals</Text>
+                <Text>
+                  Top 20{' '}
+                  <select>
+                    <option value='Hottest'>Hottest</option>
+                    <option value='Coldest'>Coldest</option>
+                    <option value='Wettest'>Wettest</option>
+                  </select>{' '}
+                  Capitals
+                </Text>
                 {data.citiesWeather.slice(0, 20).map(country => (
                   <CountryItem
                     key={country.countryName}
@@ -51,18 +60,13 @@ class Countries extends Component {
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   font-family: 'Montserrat', sans-serif;
-  border-radius: 5px;
-  background-color: #fff;
-  opacity: 0.5;
-  height: 100%;
-  overflow: auto;
   padding: 2rem 1rem;
 `;
 
 const Text = styled.h2`
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin: 1rem auto;
 `;
 

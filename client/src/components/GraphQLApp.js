@@ -89,6 +89,8 @@ const GlobalStyles = createGlobalStyle`
 
   @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
+  @import url('https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap');
+
   body {
     box-sizing: border-box;
   }
@@ -112,10 +114,11 @@ const StyledDiv = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: Againts;
+  font-family: 'Permanent Marker', cursive;
   letter-spacing: 2px;
   font-size: 3rem;
   color: #fff;
+  text-align: center;
 `;
 
 export default GraphQLApp;
