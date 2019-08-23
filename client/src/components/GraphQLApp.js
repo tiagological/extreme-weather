@@ -1,6 +1,7 @@
 import React from 'react';
-import ApolloClient from 'apollo-boost';
+import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import { persistCache } from 'apollo-cache-persist';
 import gql from 'graphql-tag';
 import Countries from './Countries';
 import styled, { createGlobalStyle } from 'styled-components/macro';
@@ -8,10 +9,6 @@ import { Normalize } from 'styled-normalize';
 import axios from 'axios';
 import summerPic from '../assets/imgs/summer.jpg';
 import againts from '../assets/fonts/againts.otf';
-
-const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql'
-});
 
 // client
 //   .query({
@@ -33,7 +30,41 @@ const client = new ApolloClient({
 //   .catch(err => console.log(err));
 
 class GraphQLApp extends React.Component {
+  state = {
+    client: null,
+    loaded: false
+  };
+
+  componentDidMount = async () => {
+    const cache = new InMemoryCache();
+
+    const client = new ApolloClient({
+      uri: 'http://localhost:3001/graphql',
+      cache
+    });
+
+    try {
+      await persistCache({
+        cache,
+        storage: window.localStorage
+      });
+    } catch (error) {
+      console.error('Error restoring Apollo cache', error);
+    }
+
+    this.setState({
+      client,
+      loaded: true
+    });
+  };
+
   render() {
+    const { client, loaded } = this.state;
+
+    if (!loaded) {
+      return <div>Loading...</div>;
+    }
+
     return (
       <ApolloProvider client={client}>
         <GlobalStyles />
