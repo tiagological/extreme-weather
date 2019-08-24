@@ -95,5 +95,17 @@ const Thermometer = styled(FaThermometerHalf)`
   transform: scale(2);
   margin: 0 1rem;
   color: ${({ temp }) =>
-    temp >= 40 ? 'red' : temp >= 35 ? '#ff3700' : '#ff6e00'};
+    temp >= 40
+      ? 'red'
+      : temp >= 35
+      ? '#ff3700'
+      : temp < 0
+      ? 'blue'
+      : temp < 10
+      ? '#00a9ff'
+      : temp < 15
+      ? '#00ff7f'
+      : temp < 20
+      ? '#ffd800'
+      : '#ff6e00'};
 `;
