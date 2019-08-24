@@ -77,6 +77,10 @@ const CitiesTempType = new GraphQLObjectType({
     code: { type: GraphQLString },
     capital: { type: GraphQLString },
     currentTemp: { type: GraphQLFloat },
+    humidity: { type: GraphQLFloat },
+    windSpeed: { type: GraphQLFloat },
+    cloudiness: { type: GraphQLFloat },
+    visibility: { type: GraphQLFloat },
     error: { type: ErrorType }
   })
 });
@@ -139,17 +143,30 @@ const RootQuery = new GraphQLObjectType({
 
                 const cityTempMetric = cityDataResponse.data.main.temp;
 
+                const humidity = cityDataResponse.data.main.humidity;
+
+                const windSpeed = cityDataResponse.data.wind.speed;
+
+                const cloudiness = cityDataResponse.data.clouds.all;
+
+                const visibility = cityDataResponse.data.visibility;
+
                 return {
                   countryName: country.name,
                   code: country.alpha2Code,
                   capital: country.capital,
                   currentTemp: cityTempMetric,
+                  humidity: humidity,
+                  windSpeed: windSpeed,
+                  cloudiness: cloudiness,
+                  visibility: visibility,
                   error: {
                     status: false,
                     message: 'no error'
                   }
                 };
               } catch (error) {
+                console.log(error);
                 return {
                   countryName: country.name,
                   capital: country.capital,

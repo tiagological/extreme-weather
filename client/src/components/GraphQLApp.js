@@ -6,7 +6,7 @@ import Countries from './Countries';
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
 import summerPic from '../assets/imgs/summer.jpg';
-import rainPic from '../assets/imgs/rain.jpg';
+import windPic from '../assets/imgs/wind.jpg';
 import winterPic from '../assets/imgs/winter.jpg';
 import againts from '../assets/fonts/againts.otf';
 import gql from 'graphql-tag';
@@ -148,8 +148,8 @@ const StyledDiv = styled.div`
   background-image: ${({ theme }) =>
     theme === 'Hottest'
       ? `url(${summerPic})`
-      : theme === 'Wettest'
-      ? `url(${rainPic})`
+      : theme === 'Windiest'
+      ? `url(${windPic})`
       : `url(${winterPic})`};
   background-size: cover;
   padding: 0 1rem 2rem;

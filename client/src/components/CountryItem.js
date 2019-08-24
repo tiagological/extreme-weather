@@ -3,8 +3,9 @@ import styled from 'styled-components/macro';
 import { FaThermometerHalf } from 'react-icons/fa';
 
 export default function CountryItem({
-  country: { countryName, code, capital, currentTemp },
-  ownIndex
+  country: { countryName, code, capital, currentTemp, windSpeed },
+  ownIndex,
+  currentFilter
 }) {
   return (
     <StyledDiv>
@@ -32,10 +33,19 @@ export default function CountryItem({
         </p>
       </CountryContainer>
       <TempContainer>
-        <Temperature>
-          {currentTemp % 1 === 0 ? currentTemp : currentTemp.toFixed(1)} C
-        </Temperature>
-        <Thermometer temp={currentTemp} />
+        {(currentFilter === 'Hottest' || currentFilter === 'Coldest') && (
+          <React.Fragment>
+            <Temperature>
+              {currentTemp % 1 === 0 ? currentTemp : currentTemp.toFixed(1)} C
+            </Temperature>
+            <Thermometer temp={currentTemp} />
+          </React.Fragment>
+        )}
+        {currentFilter === 'Windiest' && (
+          <WindSpeed>
+            {((windSpeed * 60 * 60) / 1000 / 1.60934).toFixed(1)} mph
+          </WindSpeed>
+        )}
       </TempContainer>
     </StyledDiv>
   );
@@ -74,6 +84,10 @@ const TempContainer = styled.div`
 `;
 
 const Temperature = styled.span`
+  font-size: 2rem;
+`;
+
+const WindSpeed = styled.span`
   font-size: 2rem;
 `;
 

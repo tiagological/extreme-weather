@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 import CountryItem from './CountryItem';
 import { BounceLoader } from 'react-spinners';
 import 'animate.css';
+import orderBy from 'lodash.orderby';
 
 const COUNTRIES_QUERY = gql`
   query CitiesTempQuery {
@@ -13,6 +14,10 @@ const COUNTRIES_QUERY = gql`
       code
       capital
       currentTemp
+      humidity
+      windSpeed
+      cloudiness
+      visibility
       error {
         status
         message
@@ -26,6 +31,8 @@ const COUNTRIES_QUERY = gql`
 
 class Countries extends Component {
   render() {
+    const currentFilter = this.props.currentlySelected;
+
     return (
       <React.Fragment>
         <Query query={COUNTRIES_QUERY}>
@@ -33,6 +40,23 @@ class Countries extends Component {
             if (loading) return <BounceLoader />;
             if (error) console.log(error);
 
+            const sortParameter =
+              currentFilter === 'Hottest' || currentFilter === 'Coldest'
+                ? 'currentTemp'
+                : 'windSpeed';
+
+            const sortOrder =
+              currentFilter === 'Hottest'
+                ? 'desc'
+                : currentFilter === 'Coldest'
+                ? 'asc'
+                : 'desc';
+
+            const sortedData = orderBy(
+              data.citiesWeather,
+              [sortParameter],
+              [sortOrder]
+            );
             return (
               <StyledDiv>
                 <Text>
@@ -42,15 +66,16 @@ class Countries extends Component {
                     onChange={this.props.handleChange}>
                     <option value='Hottest'>Hottest</option>
                     <option value='Coldest'>Coldest</option>
-                    <option value='Wettest'>Wettest</option>
+                    <option value='Windiest'>Windiest</option>
                   </select>{' '}
                   Capitals
                 </Text>
-                {data.citiesWeather.slice(0, 20).map(country => (
+                {sortedData.slice(0, 20).map(country => (
                   <CountryItem
                     key={country.countryName}
                     country={country}
-                    ownIndex={data.citiesWeather.indexOf(country)}
+                    ownIndex={sortedData.indexOf(country)}
+                    currentFilter={currentFilter}
                   />
                 ))}
               </StyledDiv>
@@ -71,7 +96,7 @@ const StyledDiv = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin: 1rem auto;
 `;
 
