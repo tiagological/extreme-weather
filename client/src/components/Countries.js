@@ -18,6 +18,9 @@ const COUNTRIES_QUERY = gql`
         message
       }
     }
+    lastQuery {
+      lastFetchedAt
+    }
   }
 `;
 
@@ -31,7 +34,7 @@ class Countries extends Component {
             if (error) console.log(error);
 
             return (
-              <StyledDiv className='animated slideInLeft faster'>
+              <StyledDiv>
                 <Text>
                   Top 20{' '}
                   <select>
@@ -65,8 +68,8 @@ const StyledDiv = styled.div`
   padding: 2rem 1rem;
 `;
 
-const Text = styled.h2`
-  font-size: 1.5rem;
+const Text = styled.p`
+  font-size: 1.4rem;
   margin: 1rem auto;
 `;
 

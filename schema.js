@@ -11,6 +11,8 @@ const {
   GraphQLSchema
 } = require('graphql');
 
+const GraphQLLong = require('graphql-type-long');
+
 // Country Type
 const CountryType = new GraphQLObjectType({
   name: 'Country',
@@ -76,6 +78,13 @@ const CitiesTempType = new GraphQLObjectType({
     capital: { type: GraphQLString },
     currentTemp: { type: GraphQLFloat },
     error: { type: ErrorType }
+  })
+});
+
+const TimeType = new GraphQLObjectType({
+  name: 'TimeType',
+  fields: () => ({
+    lastFetchedAt: { type: GraphQLLong }
   })
 });
 
@@ -219,6 +228,12 @@ const RootQuery = new GraphQLObjectType({
             details: false
           }
         }).then(res => res.data);
+      }
+    },
+    lastQuery: {
+      type: TimeType,
+      resolve() {
+        return { lastFetchedAt: Date.now() };
       }
     }
   }

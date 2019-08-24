@@ -1,33 +1,13 @@
 import React from 'react';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import { persistCache } from 'apollo-cache-persist';
-import gql from 'graphql-tag';
+import { persistCache, CachePersistor } from 'apollo-cache-persist';
 import Countries from './Countries';
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
-import axios from 'axios';
 import summerPic from '../assets/imgs/summer.jpg';
 import againts from '../assets/fonts/againts.otf';
-
-// client
-//   .query({
-//     query: gql`
-//       query GetCitiesTemp {
-//         citiesWeather {
-//           countryName
-//           capital
-//           currentTemp
-//           error {
-//             status
-//             message
-//           }
-//         }
-//       }
-//     `
-//   })
-//   .then(result => console.log(result.data))
-//   .catch(err => console.log(err));
+import gql from 'graphql-tag';
 
 class GraphQLApp extends React.Component {
   state = {
@@ -36,20 +16,38 @@ class GraphQLApp extends React.Component {
   };
 
   componentDidMount = async () => {
+    const parsedCache = JSON.parse(
+      localStorage.getItem('apollo-cache-persist')
+    );
+
+    const lastFetchedTime = parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
+
+    const oneHour = 3600000;
+
+    const timeNow = Date.now();
+
     const cache = new InMemoryCache();
 
     const client = new ApolloClient({
-      uri: 'http://localhost:3001/graphql',
+      uri: 'http://192.168.1.82:3001/graphql',
       cache
     });
 
-    try {
-      await persistCache({
-        cache,
-        storage: window.localStorage
-      });
-    } catch (error) {
-      console.error('Error restoring Apollo cache', error);
+    const persistor = new CachePersistor({
+      cache,
+      storage: window.localStorage
+    });
+
+    if (timeNow - lastFetchedTime > oneHour) {
+      await persistor.purge();
+      console.log('Purging the Apollo cache...');
+    } else {
+      try {
+        await persistor.restore();
+        console.log('Restoring the Apollo cache...');
+      } catch (error) {
+        console.error('Error restoring Apollo cache', error);
+      }
     }
 
     this.setState({
@@ -78,9 +76,6 @@ class GraphQLApp extends React.Component {
   }
 }
 
-const color1 = '#00A4CCFF';
-const color2 = '#F95700FF';
-
 const GlobalStyles = createGlobalStyle`
   @font-face {
     font-family: 'Againts';
@@ -91,8 +86,30 @@ const GlobalStyles = createGlobalStyle`
 
   @import url('https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap');
 
-  body {
+  html {
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
+  }
+  *,
+  *:before,
+  *:after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+  }
+  
+  html,
+  body {
+    height: 100vh;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+  }
+  
+  #root {
+    height: 100%;
   }
 `;
 
@@ -102,12 +119,6 @@ const StyledDiv = styled.div`
   align-items: center;
   height: 100%;
   overflow: auto;
-  /* background-image: linear-gradient(
-    to top,
-    #00a4ccff,
-    #fee715ff 20%,
-    #f95700ff 70%
-  ); */
   background-image: url(${summerPic});
   background-size: cover;
   padding: 0 1rem 2rem;

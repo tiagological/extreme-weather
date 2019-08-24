@@ -7,7 +7,7 @@ export default function CountryItem({
   ownIndex
 }) {
   return (
-    <StyledDiv>
+    <StyledDiv className='animated fadeIn'>
       <RankingContainer>
         <h1>
           {ownIndex + 1}

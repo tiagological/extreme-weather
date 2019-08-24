@@ -4,7 +4,6 @@ import axios from 'axios';
 import { getCities } from '../actions';
 import AutoSuggest from './AutoSuggest';
 import styled from 'styled-components/macro';
-import '../styles/globalStyles.css';
 
 class App extends React.Component {
   componentDidMount = () => {
