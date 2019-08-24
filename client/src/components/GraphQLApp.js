@@ -6,21 +6,22 @@ import Countries from './Countries';
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
 import summerPic from '../assets/imgs/summer.jpg';
+import rainPic from '../assets/imgs/rain.jpg';
+import winterPic from '../assets/imgs/winter.jpg';
 import againts from '../assets/fonts/againts.otf';
 import gql from 'graphql-tag';
 
 class GraphQLApp extends React.Component {
   state = {
     client: null,
-    loaded: false
+    loaded: false,
+    currentlySelected: 'Hottest'
   };
 
   componentDidMount = async () => {
     const parsedCache = JSON.parse(
       localStorage.getItem('apollo-cache-persist')
     );
-
-    const lastFetchedTime = parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
 
     const oneHour = 3600000;
 
@@ -38,15 +39,27 @@ class GraphQLApp extends React.Component {
       storage: window.localStorage
     });
 
-    if (timeNow - lastFetchedTime > oneHour) {
-      await persistor.purge();
-      console.log('Purging the Apollo cache...');
+    if (parsedCache !== null) {
+      const lastFetchedTime =
+        parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
+
+      if (timeNow - lastFetchedTime > oneHour) {
+        await persistor.purge();
+        console.log('Purging the Apollo cache...');
+      } else {
+        try {
+          await persistor.restore();
+          console.log('Restoring the Apollo cache...');
+        } catch (error) {
+          console.error('Error restoring Apollo cache', error);
+        }
+      }
     } else {
       try {
-        await persistor.restore();
-        console.log('Restoring the Apollo cache...');
+        await persistor.purge();
+        console.log('Purging the Apollo cache...');
       } catch (error) {
-        console.error('Error restoring Apollo cache', error);
+        console.error('Error purging Apollo cache', error);
       }
     }
 
@@ -56,8 +69,18 @@ class GraphQLApp extends React.Component {
     });
   };
 
+  state = {
+    currentlySelected: 'Hottest'
+  };
+
+  handleChange = e => {
+    this.setState({
+      currentlySelected: e.target.value
+    });
+  };
+
   render() {
-    const { client, loaded } = this.state;
+    const { client, loaded, currentlySelected } = this.state;
 
     if (!loaded) {
       return <div>Loading...</div>;
@@ -67,9 +90,12 @@ class GraphQLApp extends React.Component {
       <ApolloProvider client={client}>
         <GlobalStyles />
         <Normalize />
-        <StyledDiv>
-          <Heading style={{}}>Extreme Weather App</Heading>
-          <Countries />
+        <StyledDiv theme={currentlySelected}>
+          <Heading theme={currentlySelected}>Extreme Weather App</Heading>
+          <Countries
+            handleChange={this.handleChange}
+            currentlySelected={currentlySelected}
+          />
         </StyledDiv>
       </ApolloProvider>
     );
@@ -119,7 +145,12 @@ const StyledDiv = styled.div`
   align-items: center;
   height: 100%;
   overflow: auto;
-  background-image: url(${summerPic});
+  background-image: ${({ theme }) =>
+    theme === 'Hottest'
+      ? `url(${summerPic})`
+      : theme === 'Wettest'
+      ? `url(${rainPic})`
+      : `url(${winterPic})`};
   background-size: cover;
   padding: 0 1rem 2rem;
 `;
@@ -128,7 +159,7 @@ const Heading = styled.h1`
   font-family: 'Permanent Marker', cursive;
   letter-spacing: 2px;
   font-size: 3rem;
-  color: #fff;
+  color: ${({ theme }) => (theme === 'Coldest' ? '#000000FF' : '#fff')};
   text-align: center;
 `;
 

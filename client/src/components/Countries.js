@@ -37,7 +37,9 @@ class Countries extends Component {
               <StyledDiv>
                 <Text>
                   Top 20{' '}
-                  <select>
+                  <select
+                    value={this.props.currentlySelected}
+                    onChange={this.props.handleChange}>
                     <option value='Hottest'>Hottest</option>
                     <option value='Coldest'>Coldest</option>
                     <option value='Wettest'>Wettest</option>
