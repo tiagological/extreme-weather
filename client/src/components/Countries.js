@@ -59,17 +59,19 @@ class Countries extends Component {
             );
             return (
               <StyledDiv>
-                <Text>
-                  Top 20{' '}
-                  <select
-                    value={this.props.currentlySelected}
-                    onChange={this.props.handleChange}>
-                    <option value='Hottest'>Hottest</option>
-                    <option value='Coldest'>Coldest</option>
-                    <option value='Windiest'>Windiest</option>
-                  </select>{' '}
-                  Capitals
-                </Text>
+                <HeadingContainer>
+                  <Text>
+                    Top 20{' '}
+                    <StyledSelect
+                      value={this.props.currentlySelected}
+                      onChange={this.props.handleChange}>
+                      <option value='Hottest'>Hottest</option>
+                      <option value='Coldest'>Coldest</option>
+                      <option value='Windiest'>Windiest</option>
+                    </StyledSelect>{' '}
+                    Capitals
+                  </Text>
+                </HeadingContainer>
                 {sortedData.slice(0, 20).map(country => (
                   <CountryItem
                     key={country.countryName}
@@ -93,6 +95,24 @@ const StyledDiv = styled.div`
   align-items: stretch;
   font-family: 'Montserrat', sans-serif;
   padding: 2rem 1rem;
+`;
+
+const HeadingContainer = styled.div`
+  text-align: center;
+`;
+
+const StyledSelect = styled.select`
+  outline: none;
+  border-radius: 5px;
+  border: 2px solid transparent;
+
+  :hover {
+    border: 2px solid #ebb788;
+  }
+
+  :focus {
+    box-shadow: 0 0 0 3px #ebb788;
+  }
 `;
 
 const Text = styled.p`

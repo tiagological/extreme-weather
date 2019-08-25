@@ -10,7 +10,7 @@ export default function CountryItem({
   return (
     <StyledDiv>
       <RankingContainer>
-        <h1>
+        <Ranking>
           {ownIndex + 1}
           {ownIndex + 1 === 1
             ? 'st'
@@ -19,7 +19,7 @@ export default function CountryItem({
             : ownIndex + 1 === 3
             ? 'rd'
             : 'th'}
-        </h1>
+        </Ranking>
       </RankingContainer>
       <FlagContainer>
         <CountryFlag
@@ -29,7 +29,7 @@ export default function CountryItem({
       </FlagContainer>
       <CountryContainer>
         <p>
-          {capital}, {countryName} -{' '}
+          {capital}, {countryName}
         </p>
       </CountryContainer>
       <TempContainer>
@@ -64,6 +64,13 @@ const StyledDiv = styled.div`
 
 const RankingContainer = styled.div`
   font-family: 'Permanent Marker', cursive;
+  margin: 1rem 0;
+`;
+
+const Ranking = styled.p`
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
 `;
 
 const FlagContainer = styled.div`
@@ -81,6 +88,7 @@ const CountryFlag = styled.img``;
 
 const TempContainer = styled.div`
   align-items: center;
+  margin: 1rem 0;
 `;
 
 const Temperature = styled.span`
