@@ -43,12 +43,18 @@ class Countries extends Component {
             const sortParameter =
               currentFilter === 'Hottest' || currentFilter === 'Coldest'
                 ? 'currentTemp'
-                : 'windSpeed';
+                : currentFilter === 'Windiest'
+                ? 'windSpeed'
+                : currentFilter === 'Cloudiest'
+                ? 'cloudiness'
+                : currentFilter === 'Most Humid' || currentFilter === 'Driest'
+                ? 'humidity'
+                : 'visibility';
 
             const sortOrder =
-              currentFilter === 'Hottest'
-                ? 'desc'
-                : currentFilter === 'Coldest'
+              currentFilter === 'Coldest' ||
+              currentFilter === 'Least Visible' ||
+              currentFilter === 'Driest'
                 ? 'asc'
                 : 'desc';
 
@@ -69,6 +75,10 @@ class Countries extends Component {
                       <option value='Hottest'>Hottest</option>
                       <option value='Coldest'>Coldest</option>
                       <option value='Windiest'>Windiest</option>
+                      <option value='Cloudiest'>Cloudiest</option>
+                      <option value='Most Humid'>Most Humid</option>
+                      <option value='Driest'>Least Humid</option>
+                      <option value='Least Visible'>Least visible</option>
                     </StyledSelect>{' '}
                     Capitals
                   </Text>
@@ -106,6 +116,7 @@ const StyledSelect = styled.select`
   outline: none;
   border-radius: 5px;
   border: 2px solid transparent;
+  text-align: center;
 
   :hover {
     border: ${({ currentFilter }) =>

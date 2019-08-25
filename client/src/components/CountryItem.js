@@ -3,7 +3,16 @@ import styled from 'styled-components/macro';
 import { FaThermometerHalf } from 'react-icons/fa';
 
 export default function CountryItem({
-  country: { countryName, code, capital, currentTemp, windSpeed },
+  country: {
+    countryName,
+    code,
+    capital,
+    currentTemp,
+    windSpeed,
+    cloudiness,
+    humidity,
+    visibility
+  },
   ownIndex,
   currentFilter
 }) {
@@ -32,21 +41,26 @@ export default function CountryItem({
           {capital}, {countryName}
         </p>
       </CountryContainer>
-      <TempContainer>
+      <InfoContainer>
         {(currentFilter === 'Hottest' || currentFilter === 'Coldest') && (
           <React.Fragment>
-            <Temperature>
+            <Text>
               {currentTemp % 1 === 0 ? currentTemp : currentTemp.toFixed(1)} C
-            </Temperature>
+            </Text>
             <Thermometer temp={currentTemp} />
           </React.Fragment>
         )}
         {currentFilter === 'Windiest' && (
-          <WindSpeed>
-            {((windSpeed * 60 * 60) / 1000 / 1.60934).toFixed(1)} mph
-          </WindSpeed>
+          <Text>{((windSpeed * 60 * 60) / 1000 / 1.60934).toFixed(1)} mph</Text>
         )}
-      </TempContainer>
+        {currentFilter === 'Cloudiest' && <Text>{cloudiness} %</Text>}
+        {(currentFilter === 'Most Humid' || currentFilter === 'Driest') && (
+          <Text>{humidity} %</Text>
+        )}
+        {currentFilter === 'Least Visible' && (
+          <Text>{(visibility / 1000 / 1.60934).toFixed(1)} miles</Text>
+        )}
+      </InfoContainer>
     </StyledDiv>
   );
 }
@@ -86,16 +100,12 @@ const CountryContainer = styled.div`
 
 const CountryFlag = styled.img``;
 
-const TempContainer = styled.div`
+const InfoContainer = styled.div`
   align-items: center;
   margin: 1rem 0;
 `;
 
-const Temperature = styled.span`
-  font-size: 2rem;
-`;
-
-const WindSpeed = styled.span`
+const Text = styled.span`
   font-size: 2rem;
 `;
 
