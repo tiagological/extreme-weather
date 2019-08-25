@@ -166,7 +166,6 @@ const RootQuery = new GraphQLObjectType({
                   }
                 };
               } catch (error) {
-                console.log(error);
                 return {
                   countryName: country.name,
                   capital: country.capital,
@@ -202,9 +201,7 @@ const RootQuery = new GraphQLObjectType({
       async resolve(parent, args) {
         const firstResponse = await axios({
           method: 'get',
-          url: `http://dataservice.accuweather.com/locations/v1/cities/${
-            args.countryCode
-          }/search`,
+          url: `http://dataservice.accuweather.com/locations/v1/cities/${args.countryCode}/search`,
           params: {
             apikey: process.env.ACCUWEATHER_API_KEY,
             q: args.cityName,
@@ -236,9 +233,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parents, args) {
         return axios({
           method: 'get',
-          url: `http://dataservice.accuweather.com/currentconditions/v1/${
-            args.locationKey
-          }`,
+          url: `http://dataservice.accuweather.com/currentconditions/v1/${args.locationKey}`,
           params: {
             apikey: process.env.ACCUWEATHER_API_KEY,
             language: 'en-gb',
