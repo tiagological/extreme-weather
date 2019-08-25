@@ -60,11 +60,12 @@ class Countries extends Component {
             return (
               <StyledDiv>
                 <HeadingContainer>
-                  <Text>
+                  <Text currentFilter={currentFilter}>
                     Top 20{' '}
                     <StyledSelect
-                      value={this.props.currentlySelected}
-                      onChange={this.props.handleChange}>
+                      value={currentFilter}
+                      onChange={this.props.handleChange}
+                      currentFilter={currentFilter}>
                       <option value='Hottest'>Hottest</option>
                       <option value='Coldest'>Coldest</option>
                       <option value='Windiest'>Windiest</option>
@@ -107,17 +108,35 @@ const StyledSelect = styled.select`
   border: 2px solid transparent;
 
   :hover {
-    border: 2px solid #ebb788;
+    border: ${({ currentFilter }) =>
+      currentFilter === 'Hottest'
+        ? '2px solid #ebb788'
+        : currentFilter === 'Coldest'
+        ? ' 2px solid #000000FF'
+        : '2px solid #909CC6'};
   }
 
   :focus {
-    box-shadow: 0 0 0 3px #ebb788;
+    box-shadow: ${({ currentFilter }) =>
+      currentFilter === 'Hottest'
+        ? '0 0 0 3px #ebb788'
+        : currentFilter === 'Coldest'
+        ? '0 0 0 3px #000000FF'
+        : '0 0 0 3px #909CC6'};
+    border: ${({ currentFilter }) =>
+      currentFilter === 'Hottest'
+        ? '2px solid #ebb788'
+        : currentFilter === 'Coldest'
+        ? ' 2px solid #000000FF'
+        : '2px solid #909CC6'};
   }
 `;
 
 const Text = styled.p`
   font-size: 1.3rem;
   margin: 1rem auto;
+  color: ${({ currentFilter }) =>
+    currentFilter === 'Windiest' ? '#fff' : '#000'};
 `;
 
 export default Countries;

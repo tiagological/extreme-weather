@@ -1,7 +1,7 @@
 import React from 'react';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import { persistCache, CachePersistor } from 'apollo-cache-persist';
+import { CachePersistor } from 'apollo-cache-persist';
 import Countries from './Countries';
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
@@ -9,7 +9,6 @@ import summerPic from '../assets/imgs/summer.jpg';
 import windPic from '../assets/imgs/wind.jpg';
 import winterPic from '../assets/imgs/winter.jpg';
 import againts from '../assets/fonts/againts.otf';
-import gql from 'graphql-tag';
 
 class GraphQLApp extends React.Component {
   state = {
