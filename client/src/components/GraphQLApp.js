@@ -2,6 +2,7 @@ import React from 'react';
 import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import { CachePersistor } from 'apollo-cache-persist';
+import BackgroundPics from './BackgroundPics';
 import Countries from './Countries';
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
@@ -87,6 +88,7 @@ class GraphQLApp extends React.Component {
         <GlobalStyles />
         <Normalize />
         <StyledDiv theme={currentlySelected}>
+          <BackgroundPics currentlySelected={currentlySelected} />
           <Heading theme={currentlySelected}>Extreme Weather App</Heading>
           <Countries
             handleChange={this.handleChange}
@@ -139,23 +141,9 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   overflow: auto;
-  background-image: ${({ theme }) =>
-    theme === 'Hottest'
-      ? `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/f_auto/v1566754501/extreme-weather/summer_ej4xdq.jpg)`
-      : theme === 'Windiest'
-      ? `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/f_auto/v1566754493/extreme-weather/wind_uya9x8.jpg)`
-      : theme === 'Coldest'
-      ? `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/f_auto/v1566754495/extreme-weather/winter_tp5fj7.jpg)`
-      : theme === 'Cloudiest'
-      ? `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/f_auto/v1566754509/extreme-weather/cloudy_jr5x1s.jpg)`
-      : theme === 'Most Humid'
-      ? `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/f_auto/v1566754510/extreme-weather/humid_eh5sit.jpg)`
-      : theme === 'Driest'
-      ? `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/v1566756570/extreme-weather/dry_bwvepc.jpg)`
-      : `url(https://res.cloudinary.com/tiagological/image/upload/q_auto/v1566754514/extreme-weather/fog_j82fnf.jpg)`};
-  background-size: cover;
+
   padding: 0 1rem 2rem;
 `;
 

@@ -78,7 +78,7 @@ class Countries extends Component {
                       <option value='Cloudiest'>Cloudiest</option>
                       <option value='Most Humid'>Most Humid</option>
                       <option value='Driest'>Least Humid</option>
-                      <option value='Least Visible'>Least visible</option>
+                      <option value='Least Visible'>Least Visible</option>
                     </StyledSelect>{' '}
                     Capitals
                   </Text>
