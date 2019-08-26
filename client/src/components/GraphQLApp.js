@@ -151,8 +151,15 @@ const Heading = styled.h1`
   font-family: 'Permanent Marker', cursive;
   letter-spacing: 2px;
   font-size: 3rem;
-  color: ${({ theme }) => (theme === 'Coldest' ? '#000000FF' : '#fff')};
+  color: ${({ theme }) =>
+    theme === 'Coldest'
+      ? '#000000FF'
+      : theme === 'Driest'
+      ? '#8C5E45'
+      : '#fbfbf8'};
   text-align: center;
+  text-shadow: ${({ theme }) =>
+    theme === 'Driest' ? '0 0 5px #fbfbf8' : '0 0 5px #000'};
 `;
 
 export default GraphQLApp;

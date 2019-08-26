@@ -77,8 +77,8 @@ class Countries extends Component {
                       <option value='Windiest'>Windiest</option>
                       <option value='Cloudiest'>Cloudiest</option>
                       <option value='Most Humid'>Most Humid</option>
-                      <option value='Driest'>Least Humid</option>
-                      <option value='Least Visible'>Least Visible</option>
+                      <option value='Driest'>Driest</option>
+                      <option value='Least Visible'>Foggiest</option>
                     </StyledSelect>{' '}
                     Capitals
                   </Text>
@@ -130,10 +130,12 @@ const StyledSelect = styled.select`
   :focus {
     box-shadow: ${({ currentFilter }) =>
       currentFilter === 'Hottest'
-        ? '0 0 0 3px #ebb788'
+        ? '0 0 5px 2px #ebb788'
         : currentFilter === 'Coldest'
-        ? '0 0 0 3px #000000FF'
-        : '0 0 0 3px #909CC6'};
+        ? '0 0 5px 2px #000000FF'
+        : currentFilter === 'Driest'
+        ? '0 0 5px 2px #8C5E45'
+        : '0 0 5px 2px #909CC6'};
     border: ${({ currentFilter }) =>
       currentFilter === 'Hottest'
         ? '2px solid #ebb788'
@@ -145,9 +147,17 @@ const StyledSelect = styled.select`
 
 const Text = styled.p`
   font-size: 1.3rem;
+  font-weight: 600;
   margin: 1rem auto;
   color: ${({ currentFilter }) =>
-    currentFilter === 'Windiest' ? '#fff' : '#000'};
+    currentFilter === 'Windiest' ||
+    currentFilter === 'Cloudiest' ||
+    currentFilter === 'Most Humid' ||
+    currentFilter === 'Driest'
+      ? '#fff'
+      : '#000'};
+  text-shadow: ${({ currentFilter }) =>
+    currentFilter === 'Most Humid' ? '0 0 5px #000' : null};
 `;
 
 export default Countries;
