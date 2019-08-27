@@ -83,14 +83,16 @@ class Countries extends Component {
                     Capitals
                   </Text>
                 </HeadingContainer>
-                {sortedData.slice(0, 20).map(country => (
-                  <CountryItem
-                    key={country.countryName}
-                    country={country}
-                    ownIndex={sortedData.indexOf(country)}
-                    currentFilter={currentFilter}
-                  />
-                ))}
+                <CountryList>
+                  {sortedData.slice(0, 20).map(country => (
+                    <CountryItem
+                      key={country.countryName}
+                      country={country}
+                      ownIndex={sortedData.indexOf(country)}
+                      currentFilter={currentFilter}
+                    />
+                  ))}
+                </CountryList>
               </StyledDiv>
             );
           }}
@@ -110,6 +112,20 @@ const StyledDiv = styled.div`
 
 const HeadingContainer = styled.div`
   text-align: center;
+`;
+
+const CountryList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: 'Montserrat', sans-serif;
+  padding: 2rem 1rem;
+
+  @media only screen and (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+  }
 `;
 
 const StyledSelect = styled.select`
@@ -146,7 +162,7 @@ const StyledSelect = styled.select`
 `;
 
 const Text = styled.p`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 1rem auto;
   color: ${({ currentFilter }) =>
@@ -158,6 +174,10 @@ const Text = styled.p`
       : '#000'};
   text-shadow: ${({ currentFilter }) =>
     currentFilter === 'Most Humid' ? '0 0 5px #000' : null};
+
+  @media only screen and (min-width: 768px) {
+    font-size: 1.75rem;
+  }
 `;
 
 export default Countries;

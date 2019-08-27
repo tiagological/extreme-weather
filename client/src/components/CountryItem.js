@@ -59,7 +59,7 @@ export default function CountryItem({
         )}
         {currentFilter === 'Least Visible' && (
           <Text>
-            {(visibility / 1000 / 1.60934).toFixed(1)} miles of visibility
+            {(visibility / 1000 / 1.60934).toFixed(1)} miles visibility
           </Text>
         )}
       </InfoContainer>
@@ -105,6 +105,8 @@ const CountryFlag = styled.img``;
 const InfoContainer = styled.div`
   align-items: center;
   margin: 1rem 0;
+  text-align: center;
+  margin-top: auto;
 `;
 
 const Text = styled.span`

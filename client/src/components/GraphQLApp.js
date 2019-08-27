@@ -123,7 +123,7 @@ const GlobalStyles = createGlobalStyle`
   
   html,
   body {
-    height: 100vh;
+    height: 100%;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
@@ -134,6 +134,8 @@ const GlobalStyles = createGlobalStyle`
   
   #root {
     height: 100%;
+    width: 100%;
+    position: fixed;
   }
 `;
 
@@ -141,7 +143,7 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   overflow: auto;
 
   padding: 0 1rem 2rem;
@@ -159,7 +161,10 @@ const Heading = styled.h1`
       : '#fbfbf8'};
   text-align: center;
   text-shadow: ${({ theme }) =>
-    theme === 'Driest' ? '0 0 5px #fbfbf8' : '0 0 5px #000'};
+    theme === 'Driest' || theme === 'Coldest'
+      ? '0 0 5px #fbfbf8'
+      : '0 0 5px #000'};
+  transition: color 1s ease-in-out;
 `;
 
 export default GraphQLApp;
