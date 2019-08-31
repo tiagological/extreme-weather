@@ -37,7 +37,12 @@ class Countries extends Component {
       <React.Fragment>
         <Query query={COUNTRIES_QUERY}>
           {({ loading, error, data }) => {
-            if (loading) return <BounceLoader />;
+            if (loading)
+              return (
+                <LoaderContainer>
+                  <BounceLoader />
+                </LoaderContainer>
+              );
             if (error) console.log(error);
 
             const sortParameter =
@@ -101,6 +106,16 @@ class Countries extends Component {
     );
   }
 }
+
+const LoaderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+`;
 
 const StyledDiv = styled.div`
   display: flex;
