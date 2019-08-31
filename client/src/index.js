@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GraphQLApp from './components/GraphQLApp';
+import App from './components/App';
 
-ReactDOM.render(<GraphQLApp />, document.querySelector('#root'));
+ReactDOM.render(<App />, document.querySelector('#root'));

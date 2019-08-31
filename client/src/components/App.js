@@ -1,81 +1,170 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import { getCities } from '../actions';
-import AutoSuggest from './AutoSuggest';
-import styled from 'styled-components/macro';
+import ApolloClient, { InMemoryCache } from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+import { CachePersistor } from 'apollo-cache-persist';
+import BackgroundPics from './BackgroundPics';
+import Countries from './Countries';
+import styled, { createGlobalStyle } from 'styled-components/macro';
+import { Normalize } from 'styled-normalize';
+import againts from '../assets/fonts/againts.otf';
 
 class App extends React.Component {
-  componentDidMount = () => {
-    this.props.getCities();
+  state = {
+    client: null,
+    loaded: false,
+    currentlySelected: 'Hottest'
   };
 
-  getCityWeather = async userInput => {
-    const { citiesList } = this.props;
-
-    const filteredCities = citiesList.filter(
-      city => city.capital.toLowerCase() === userInput.toLowerCase()
+  componentDidMount = async () => {
+    const parsedCache = JSON.parse(
+      localStorage.getItem('apollo-cache-persist')
     );
 
-    const filteredCity = filteredCities[0];
+    const oneHour = 3600000;
 
-    if (filteredCities.length < 1) {
-      console.log('City does NOT exist in the list');
-    } else if (filteredCities.length > 0) {
-      console.log('City DOES exist in the list');
-      console.log(filteredCities);
-    }
+    const timeNow = Date.now();
 
-    try {
-      const response = await axios({
-        url: '/get-city-temperature',
-        method: 'post',
-        data: {
-          capital: filteredCity.capital,
-          countryCode: filteredCity.id
+    const cache = new InMemoryCache();
+
+    const client = new ApolloClient({
+      uri: 'http://192.168.1.82:3001/graphql',
+      cache
+    });
+
+    const persistor = new CachePersistor({
+      cache,
+      storage: window.localStorage
+    });
+
+    if (parsedCache !== null) {
+      const lastFetchedTime =
+        parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
+
+      if (timeNow - lastFetchedTime > oneHour) {
+        await persistor.purge();
+        console.log('Purging the Apollo cache...');
+      } else {
+        try {
+          await persistor.restore();
+          console.log('Restoring the Apollo cache...');
+        } catch (error) {
+          console.error('Error restoring Apollo cache', error);
         }
-      });
-      const data = response.data;
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+      }
+    } else {
+      try {
+        await persistor.purge();
+        console.log('Purging the Apollo cache...');
+      } catch (error) {
+        console.error('Error purging Apollo cache', error);
+      }
     }
+
+    this.setState({
+      client,
+      loaded: true
+    });
+  };
+
+  state = {
+    currentlySelected: 'Hottest'
+  };
+
+  handleChange = e => {
+    this.setState({
+      currentlySelected: e.target.value
+    });
   };
 
   render() {
-    const citiesList = this.props.citiesList.map(country => {
-      return country.capital;
-    });
+    const { client, loaded, currentlySelected } = this.state;
 
-    const { userInput } = this.props;
+    if (!loaded) {
+      return <div>Loading...</div>;
+    }
 
     return (
-      <Container>
-        <Text>Autocomplete Testing</Text>
-        <AutoSuggest citiesList={citiesList} />
-        <button onClick={() => this.getCityWeather(userInput)}>Search</button>
-      </Container>
+      <ApolloProvider client={client}>
+        <GlobalStyles />
+        <Normalize />
+        <StyledDiv theme={currentlySelected}>
+          <BackgroundPics currentlySelected={currentlySelected} />
+          <Heading theme={currentlySelected}>Extreme Weather App</Heading>
+          <Countries
+            handleChange={this.handleChange}
+            currentlySelected={currentlySelected}
+          />
+        </StyledDiv>
+      </ApolloProvider>
     );
   }
 }
 
-const Container = styled.div`
+const GlobalStyles = createGlobalStyle`
+  @font-face {
+    font-family: 'Againts';
+    src: url(${againts});
+  }
+
+  @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+  @import url('https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap');
+
+  html {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  *,
+  *:before,
+  *:after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+  }
+  
+  #root {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 100%;
-  box-sizing: border-box;
+  overflow: auto;
+
+  padding: 0 1rem 2rem;
 `;
 
-const Text = styled.h1`
-  margin: 0;
+const Heading = styled.h1`
+  font-family: 'Permanent Marker', cursive;
+  letter-spacing: 2px;
+  font-size: 3rem;
+  color: ${({ theme }) =>
+    theme === 'Coldest'
+      ? '#000000FF'
+      : theme === 'Driest'
+      ? '#8C5E45'
+      : '#fbfbf8'};
+  text-align: center;
+  text-shadow: ${({ theme }) =>
+    theme === 'Driest' || theme === 'Coldest'
+      ? '0 0 5px #fbfbf8'
+      : '0 0 5px #000'};
+  transition: color 1s ease-in-out;
 `;
 
-const mapStateToProps = state => {
-  return {
-    citiesList: state.citiesData,
-    userInput: state.userInput
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  { getCities }
-)(App);
+export default App;

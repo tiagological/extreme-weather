@@ -63,7 +63,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         return axios({
           method: 'get',
-          url: 'https://***REMOVED***/rest/v1/all',
+          url: 'https://ajayakv-rest-countries-v1.p.rapidapi.com/rest/v1/all',
           headers: {
             'X-RapidAPI-Host': process.env.COUNTRIES_API_HOST,
             'X-RapidAPI-Key': process.env.COUNTRIES_API_KEY
@@ -77,7 +77,7 @@ const RootQuery = new GraphQLObjectType({
         try {
           const countryListResponse = await axios({
             method: 'get',
-            url: 'https://***REMOVED***/rest/v1/all',
+            url: 'https://ajayakv-rest-countries-v1.p.rapidapi.com/rest/v1/all',
             headers: {
               'X-RapidAPI-Host': process.env.COUNTRIES_API_HOST,
               'X-RapidAPI-Key': process.env.COUNTRIES_API_KEY
@@ -92,7 +92,7 @@ const RootQuery = new GraphQLObjectType({
                 const cityDataResponse = await axios({
                   method: 'get',
                   url:
-                    'https://***REMOVED***/weather',
+                    'https://community-open-weather-map.p.rapidapi.com/weather',
                   headers: {
                     'X-RapidAPI-Host': process.env.OPENWEATHER_API_HOST,
                     'X-RapidAPI-Key': process.env.OPENWEATHER_API_KEY
