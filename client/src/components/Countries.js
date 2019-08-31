@@ -77,7 +77,7 @@ class Countries extends Component {
                       value={currentFilter}
                       onChange={this.props.handleChange}
                       currentFilter={currentFilter}>
-                      <option value='Hottest'>Hottest</option>
+                      <option value='Hottest'>Hottest </option>
                       <option value='Coldest'>Coldest</option>
                       <option value='Windiest'>Windiest</option>
                       <option value='Cloudiest'>Cloudiest</option>
@@ -147,7 +147,7 @@ const StyledSelect = styled.select`
   outline: none;
   border-radius: 5px;
   border: 2px solid transparent;
-  text-align: center;
+  text-align-last: center;
 
   :hover {
     border: ${({ currentFilter }) =>
