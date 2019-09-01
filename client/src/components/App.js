@@ -8,6 +8,11 @@ import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
 import againts from '../assets/fonts/againts.otf';
 
+const uri =
+  process.env.NODE === 'production'
+    ? '/graphql'
+    : 'http://192.168.1.82:3001/graphql';
+
 class App extends React.Component {
   state = {
     client: null,
@@ -27,7 +32,7 @@ class App extends React.Component {
     const cache = new InMemoryCache();
 
     const client = new ApolloClient({
-      uri: 'http://192.168.1.82:3001/graphql',
+      uri,
       cache
     });
 
