@@ -9,7 +9,7 @@ import { Normalize } from 'styled-normalize';
 import againts from '../assets/fonts/againts.otf';
 
 const uri =
-  process.env.NODE === 'production'
+  process.env.NODE_ENV === 'production'
     ? '/graphql'
     : 'http://192.168.1.82:3001/graphql';
 
