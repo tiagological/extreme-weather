@@ -81,7 +81,7 @@ class Countries extends Component {
                       <option value='Coldest'>Coldest</option>
                       <option value='Windiest'>Windiest</option>
                       <option value='Cloudiest'>Cloudiest</option>
-                      <option value='Most Humid'>Most Humid</option>
+                      <option value='Most Humid'>Humid</option>
                       <option value='Driest'>Driest</option>
                       <option value='Least Visible'>Foggiest</option>
                     </StyledSelect>{' '}
@@ -148,6 +148,7 @@ const StyledSelect = styled.select`
   border-radius: 5px;
   border: 2px solid transparent;
   text-align-last: center;
+  transition: all 200ms ease-in-out;
 
   :hover {
     border: ${({ currentFilter }) =>

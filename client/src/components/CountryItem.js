@@ -53,9 +53,9 @@ export default function CountryItem({
         {currentFilter === 'Windiest' && (
           <Text>{((windSpeed * 60 * 60) / 1000 / 1.60934).toFixed(1)} mph</Text>
         )}
-        {currentFilter === 'Cloudiest' && <Text>{cloudiness}% Cloudy</Text>}
+        {currentFilter === 'Cloudiest' && <Text>{cloudiness}% cloudy</Text>}
         {(currentFilter === 'Most Humid' || currentFilter === 'Driest') && (
-          <Text>{humidity}% Humid</Text>
+          <Text>{humidity}% humidity</Text>
         )}
         {currentFilter === 'Least Visible' && (
           <Text>
