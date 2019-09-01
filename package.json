@@ -4,10 +4,11 @@
   "description": "Ranks global capital cities by weather",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node server.js",
+    "start": "node server.js",
+    "server": "nodemon server.js",
     "client": "node start-client.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Tiago Marques",
   "license": "ISC",
