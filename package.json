@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix client",
+    "server": "node server.js",
+    "client": "node start-client.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Tiago Marques",
