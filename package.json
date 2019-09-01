@@ -2,7 +2,7 @@
   "name": "capital-cities-weather",
   "version": "1.0.0",
   "description": "Ranks global capital cities by weather",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
