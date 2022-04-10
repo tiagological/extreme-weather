@@ -32,7 +32,7 @@ export default function CountryItem({
       </RankingContainer>
       <FlagContainer>
         <CountryFlag
-          src={`https://www.countryflags.io/${code}/shiny/64.png`}
+          src={`https://flagcdn.com/60x45/${code.toLowerCase()}.png`}
           alt={`${countryName} flag`}
         />
       </FlagContainer>

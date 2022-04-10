@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+const { countryList } = require('./constants');
 
 const {
   GraphQLObjectType,
@@ -11,16 +12,6 @@ const {
 } = require('graphql');
 
 const GraphQLLong = require('graphql-type-long');
-
-// Country Type
-const CountryType = new GraphQLObjectType({
-  name: 'Country',
-  fields: () => ({
-    name: { type: GraphQLString },
-    alpha2Code: { type: GraphQLString },
-    capital: { type: GraphQLString }
-  })
-});
 
 // Error Type
 
@@ -58,64 +49,39 @@ const TimeType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    countries: {
-      type: new GraphQLList(CountryType),
-      resolve(parent, args) {
-        return axios({
-          method: 'get',
-          url: 'https://ajayakv-rest-countries-v1.p.rapidapi.com/rest/v1/all',
-          headers: {
-            'X-RapidAPI-Host': process.env.COUNTRIES_API_HOST,
-            'X-RapidAPI-Key': process.env.COUNTRIES_API_KEY
-          }
-        }).then(res => res.data);
-      }
-    },
     citiesWeather: {
       type: new GraphQLList(CitiesTempType),
-      async resolve(parent, args) {
+      async resolve() {
         try {
-          const countryListResponse = await axios({
-            method: 'get',
-            url: 'https://ajayakv-rest-countries-v1.p.rapidapi.com/rest/v1/all',
-            headers: {
-              'X-RapidAPI-Host': process.env.COUNTRIES_API_HOST,
-              'X-RapidAPI-Key': process.env.COUNTRIES_API_KEY
-            }
-          });
-
-          const countryList = countryListResponse.data;
-
           const fullResults = await Promise.all(
-            countryList.map(async country => {
+            countryList.map(async (country) => {
               try {
                 const cityDataResponse = await axios({
                   method: 'get',
-                  url:
-                    'https://community-open-weather-map.p.rapidapi.com/weather',
+                  url: process.env.WEATHER_API_URL,
                   headers: {
-                    'X-RapidAPI-Host': process.env.OPENWEATHER_API_HOST,
-                    'X-RapidAPI-Key': process.env.OPENWEATHER_API_KEY
+                    'X-RapidAPI-Key': process.env.WEATHER_API_KEY
                   },
                   params: {
-                    q: `${country.capital},${country.alpha2Code}`,
-                    units: 'metric'
+                    q: country.capital
                   }
                 });
 
-                const cityTempMetric = cityDataResponse.data.main.temp;
-
-                const humidity = cityDataResponse.data.main.humidity;
-
-                const windSpeed = cityDataResponse.data.wind.speed;
-
-                const cloudiness = cityDataResponse.data.clouds.all;
-
-                const visibility = cityDataResponse.data.visibility;
+                const {
+                  data: {
+                    current: {
+                      temp_c: cityTempMetric,
+                      humidity,
+                      wind_mph: windSpeed,
+                      cloud: cloudiness,
+                      vis_miles: visibility
+                    }
+                  }
+                } = cityDataResponse;
 
                 return {
                   countryName: country.name,
-                  code: country.alpha2Code,
+                  code: country.code,
                   capital: country.capital,
                   currentTemp: cityTempMetric,
                   humidity: humidity,
@@ -142,7 +108,7 @@ const RootQuery = new GraphQLObjectType({
           );
 
           const filteredResults = fullResults.filter(
-            country => country.error.status !== true
+            (country) => country.error.status !== true
           );
 
           // returns list sorted by current temperature
