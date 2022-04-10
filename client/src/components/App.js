@@ -75,7 +75,7 @@ class App extends React.Component {
     currentlySelected: 'Hottest'
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       currentlySelected: e.target.value
     });
