@@ -6,8 +6,8 @@
     "scripts": {
         "start": "node server.js",
         "server": "nodemon server.js",
-        "client": "cd client && npm run start",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
+        "client": "cd client && yarn start",
+        "dev": "concurrently \"yarn server\" \"yarn client\""
     },
     "author": "Tiago Marques",
     "license": "ISC",
