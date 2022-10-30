@@ -9,100 +9,102 @@ import { Normalize } from 'styled-normalize';
 import againts from '../assets/fonts/againts.otf';
 
 const uri =
-  process.env.NODE_ENV === 'production'
-    ? '/graphql'
-    : 'http://192.168.1.82:3001/graphql';
+    process.env.NODE_ENV === 'production'
+        ? '/graphql'
+        : 'http://localhost:3001/graphql';
 
 class App extends React.Component {
-  state = {
-    client: null,
-    loaded: false,
-    currentlySelected: 'Hottest'
-  };
+    state = {
+        client: null,
+        loaded: false,
+        currentlySelected: 'Hottest',
+    };
 
-  componentDidMount = async () => {
-    const parsedCache = JSON.parse(
-      localStorage.getItem('apollo-cache-persist')
-    );
+    componentDidMount = async () => {
+        const parsedCache = JSON.parse(
+            localStorage.getItem('apollo-cache-persist')
+        );
 
-    const oneHour = 3600000;
+        const oneHour = 3600000;
 
-    const timeNow = Date.now();
+        const timeNow = Date.now();
 
-    const cache = new InMemoryCache();
+        const cache = new InMemoryCache();
 
-    const client = new ApolloClient({
-      uri,
-      cache
-    });
+        const client = new ApolloClient({
+            uri,
+            cache,
+        });
 
-    const persistor = new CachePersistor({
-      cache,
-      storage: window.localStorage
-    });
+        const persistor = new CachePersistor({
+            cache,
+            storage: window.localStorage,
+        });
 
-    if (parsedCache !== null) {
-      const lastFetchedTime =
-        parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
+        if (parsedCache !== null) {
+            const lastFetchedTime =
+                parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
 
-      if (timeNow - lastFetchedTime > oneHour) {
-        await persistor.purge();
-        console.log('Purging the Apollo cache...');
-      } else {
-        try {
-          await persistor.restore();
-          console.log('Restoring the Apollo cache...');
-        } catch (error) {
-          console.error('Error restoring Apollo cache', error);
+            if (timeNow - lastFetchedTime > oneHour) {
+                await persistor.purge();
+                console.log('Purging the Apollo cache...');
+            } else {
+                try {
+                    await persistor.restore();
+                    console.log('Restoring the Apollo cache...');
+                } catch (error) {
+                    console.error('Error restoring Apollo cache', error);
+                }
+            }
+        } else {
+            try {
+                await persistor.purge();
+                console.log('Purging the Apollo cache...');
+            } catch (error) {
+                console.error('Error purging Apollo cache', error);
+            }
         }
-      }
-    } else {
-      try {
-        await persistor.purge();
-        console.log('Purging the Apollo cache...');
-      } catch (error) {
-        console.error('Error purging Apollo cache', error);
-      }
+
+        this.setState({
+            client,
+            loaded: true,
+        });
+    };
+
+    state = {
+        currentlySelected: 'Hottest',
+    };
+
+    handleChange = (e) => {
+        this.setState({
+            currentlySelected: e.target.value,
+        });
+    };
+
+    render() {
+        const { client, loaded, currentlySelected } = this.state;
+
+        if (!loaded) {
+            return <div>Loading...</div>;
+        }
+
+        return (
+            <ApolloProvider client={client}>
+                <GlobalStyles />
+                <Normalize />
+                <StyledDiv theme={currentlySelected}>
+                    <BackgroundPics currentlySelected={currentlySelected} />
+                    <Heading theme={currentlySelected}>
+                        Extreme Weather App
+                    </Heading>
+                    <Countries
+                        handleChange={this.handleChange}
+                        currentlySelected={currentlySelected}
+                    />
+                </StyledDiv>
+            </ApolloProvider>
+        );
     }
-
-    this.setState({
-      client,
-      loaded: true
-    });
-  };
-
-  state = {
-    currentlySelected: 'Hottest'
-  };
-
-  handleChange = (e) => {
-    this.setState({
-      currentlySelected: e.target.value
-    });
-  };
-
-  render() {
-    const { client, loaded, currentlySelected } = this.state;
-
-    if (!loaded) {
-      return <div>Loading...</div>;
-    }
-
-    return (
-      <ApolloProvider client={client}>
-        <GlobalStyles />
-        <Normalize />
-        <StyledDiv theme={currentlySelected}>
-          <BackgroundPics currentlySelected={currentlySelected} />
-          <Heading theme={currentlySelected}>Extreme Weather App</Heading>
-          <Countries
-            handleChange={this.handleChange}
-            currentlySelected={currentlySelected}
-          />
-        </StyledDiv>
-      </ApolloProvider>
-    );
-  }
 }
 
 const GlobalStyles = createGlobalStyle`
@@ -145,31 +147,31 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const StyledDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    overflow: auto;
 
-  padding: 0 1rem 2rem;
+    padding: 0 1rem 2rem;
 `;
 
 const Heading = styled.h1`
-  font-family: 'Permanent Marker', cursive;
-  letter-spacing: 2px;
-  font-size: 3rem;
-  color: ${({ theme }) =>
-    theme === 'Coldest'
-      ? '#000000FF'
-      : theme === 'Driest'
-      ? '#8C5E45'
-      : '#fbfbf8'};
-  text-align: center;
-  text-shadow: ${({ theme }) =>
-    theme === 'Driest' || theme === 'Coldest'
-      ? '0 0 5px #fbfbf8'
-      : '0 0 5px #000'};
-  transition: color 1s ease-in-out;
+    font-family: 'Permanent Marker', cursive;
+    letter-spacing: 2px;
+    font-size: 3rem;
+    color: ${({ theme }) =>
+        theme === 'Coldest'
+            ? '#000000FF'
+            : theme === 'Driest'
+            ? '#8C5E45'
+            : '#fbfbf8'};
+    text-align: center;
+    text-shadow: ${({ theme }) =>
+        theme === 'Driest' || theme === 'Coldest'
+            ? '0 0 5px #fbfbf8'
+            : '0 0 5px #000'};
+    transition: color 1s ease-in-out;
 `;
 
 export default App;
