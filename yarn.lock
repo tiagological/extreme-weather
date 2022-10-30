@@ -807,11 +807,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
-graphql-type-long@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/graphql-type-long/-/graphql-type-long-0.1.1.tgz#c1b1323f7b3bb3fe48f05502b883145f90adbfd6"
-  integrity sha512-pIp/F3LR0qqfbF4TX3CwBwPskA7850KG6/DnzaYJtdgxxzw20dcKfutLbyk8okBGg8iHbFoXgnZWHgfwNmxSZw==
-
 graphql@^14.4.2:
   version "14.7.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.7.0.tgz#7fa79a80a69be4a31c27dda824dc04dac2035a72"

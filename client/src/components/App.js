@@ -42,8 +42,12 @@ class App extends React.Component {
         });
 
         if (parsedCache !== null) {
-            const lastFetchedTime =
+            const lastFetchedTimeString =
                 parsedCache['$ROOT_QUERY.lastQuery'].lastFetchedAt;
+
+            debugger;
+
+            const lastFetchedTime = new Date(lastFetchedTimeString).getTime();
 
             if (timeNow - lastFetchedTime > oneHour) {
                 await persistor.purge();
